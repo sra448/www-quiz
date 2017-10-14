@@ -29,4 +29,4 @@ module.exports = ({ id, on-click }, children) ->
   div {},
     input { id, on-change, type: "file", accept: "image/*", capture: "camera" }
     label { html-for: id },
-      button {}, children
+      button { component: "span" }, children

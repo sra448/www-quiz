@@ -8,6 +8,13 @@ publish-screen = require "./publish-screen.ls"
 
 
 
+# require the styles
+
+
+require "./styles.scss"
+
+
+
 # React Redux Bindings
 
 
