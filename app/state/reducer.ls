@@ -1,26 +1,40 @@
+# State Definitions
+
+
 initial-state =
   quiz-in-creation: undefined
+  quiz-in-play: undefined
   quizes: []
 
 
-initial-new-quiz-state =
+initial-play-quiz-state =
+  category-id: undefined
+  questions: []
+  current-question-id: 1
+  score: 0
+
+
+initial-create-quiz-state =
   category-id: undefined
   current-question-id: 0
   questions: {}
   is-finished: false
 
 
-initial-new-question-state =
+initial-create-question-state =
   image: undefined
   answers:
-    0: "" # first value is the correct answer
-    1: ""
-    2: ""
+    0: "foo" # first value is the correct answer
+    1: "bar"
+    2: "cis"
 
+
+
+# Play a quiz
 
 
 create-quiz = (state) ->
-  { ...state, quiz-in-creation: initial-new-quiz-state }
+  { ...state, quiz-in-creation: initial-create-quiz-state }
 
 
 create-quiz-choose-category = (state, category-id) ->
@@ -30,7 +44,7 @@ create-quiz-choose-category = (state, category-id) ->
 
 create-quiz-add-question = (image, state) -->
   current-question-id = state.quiz-in-creation.current-question-id + 1
-  question = { ...initial-new-question-state, image }
+  question = { ...initial-create-question-state, image }
   questions = { ...state.quiz-in-creation.questions, "#{current-question-id}": question }
   quiz-in-creation = { ...state.quiz-in-creation, questions, current-question-id }
 
@@ -62,10 +76,50 @@ create-quiz-publish-current = (state) ->
 
 
 
+
+
+
+# Create a quiz
+
+
+load-latest-quiz = (state) ->
+  quiz = state.quizes[state.quizes.length - 1] || {}
+  quiz-in-play = { ...initial-play-quiz-state, ...quiz }
+  { ...state, quiz-in-play }
+
+
+current-quiz-choose-answer = (state, id) ->
+  current-question-id = state.quiz-in-play.current-question-id + 1
+  score = id == 0 ? score + 1 : score
+  quiz-in-play = { ...state.quiz-in-play, current-question-id, score }
+  { ...state, quiz-in-play }
+
+
+maybe-finish-quiz = (state) ->
+  current-question-id = state.quiz-in-play.current-question-id
+
+  if current-question-id <= 3
+    state
+  else
+    { ...state, quiz-in-play: undefined }
+
+
+
+# Reducer
+
+
 module.exports = (state = initial-state, action) ->
   console.log action, state
 
   switch action.type
+
+    case \QUIZ_PLAY
+      load-latest-quiz state
+
+    case \QUIZ_PLAY_ANSWER_CHOOSE
+      current-quiz-choose-answer state, state.id
+        |> maybe-finish-quiz
+
     case \QUIZ_CREATE
       create-quiz state
 

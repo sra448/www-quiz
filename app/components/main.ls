@@ -4,26 +4,30 @@
 
 
 navigation = require "./navigation/main.ls"
-create-dialog = require "./create-quiz/main.ls"
+play-quiz-dialog = require "./play-quiz/main.ls"
+create-quiz-dialog = require "./create-quiz/main.ls"
 
 
 
 # React Redux Bindings
 
 
-map-state-to-props = ({ quiz-in-creation }) ->
-  { quiz-in-creation }
+map-state-to-props = ({ quiz-in-creation, quiz-in-play }) ->
+  { quiz-in-creation, quiz-in-play }
 
 
 
 # Main Component
 
 
-main = ({ quiz-in-creation }) ->
+main = ({ quiz-in-play, quiz-in-creation }) ->
   div {},
-    navigation {} if !quiz-in-creation
-    create-dialog {} if quiz-in-creation?
-
+    if quiz-in-play?
+      play-quiz-dialog {}
+    else if quiz-in-creation?
+      create-quiz-dialog {}
+    else
+      navigation {}
 
 
 # Connected Main Component

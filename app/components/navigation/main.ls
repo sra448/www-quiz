@@ -12,6 +12,8 @@ button = create-factory Button
 
 
 map-dispatch-to-props = (dispatch) ->
+  on-play-click: ->
+    dispatch { type: \QUIZ_PLAY }
   on-create-click: ->
     dispatch { type: \QUIZ_CREATE }
 
@@ -20,10 +22,10 @@ map-dispatch-to-props = (dispatch) ->
 # Main Component
 
 
-main = ({ on-create-click }) ->
+main = ({ on-play-click, on-create-click }) ->
   div {},
     h1 {}, "www quiz"
-    button {}, "Play"
+    button { on-click: on-play-click }, "Play"
     button { on-click: on-create-click }, "Create"
 
 
