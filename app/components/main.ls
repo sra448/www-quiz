@@ -1,16 +1,10 @@
-{ create-element } = require \react
+{ create-factory } = require \react
 { connect } = require \react-redux
 { div } = require \react-dom-factories
 
 
 navigation = require "./navigation/main.ls"
 create-dialog = require "./create-quiz/main.ls"
-
-
-
-create-factory = (component) ->
-  (...args) ->
-    create-element component, ...args
 
 
 

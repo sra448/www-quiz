@@ -1,13 +1,7 @@
 { connect } = require \react-redux
 { div, h1, a } = require \react-dom-factories
-{ create-element } = require \react
+{ create-factory } = require \react
 { Button } = require \material-ui
-
-
-
-create-factory = (component) ->
-  (...args) ->
-    create-element component, ...args
 
 
 button = create-factory Button

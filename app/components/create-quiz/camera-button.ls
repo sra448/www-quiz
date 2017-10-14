@@ -1,12 +1,6 @@
 { div, input, label } = require \react-dom-factories
-{ create-element } = require \react
+{ create-factory } = require \react
 { Button } = require \material-ui
-
-
-
-create-factory = (component) ->
-  (...args) ->
-    create-element component, ...args
 
 
 button = create-factory Button
