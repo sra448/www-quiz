@@ -1,11 +1,13 @@
 initial-state =
   quiz-in-creation: undefined
+  quizes: []
 
 
 initial-new-quiz-state =
   category-id: undefined
   current-question-id: 0
   questions: {}
+  is-finished: false
 
 
 initial-new-question-state =
@@ -47,6 +49,18 @@ create-quiz-change-question-answer = (state, id, text) ->
   { ...state, quiz-in-creation }
 
 
+create-quiz-show-preview = (state) ->
+  { quiz-in-creation } = state
+  quiz-in-creation = { ...state.quiz-in-creation, is-finished: true }
+  { ...state, quiz-in-creation }
+
+
+create-quiz-publish-current = (state) ->
+  { questions, category-id } = state.quiz-in-creation
+  quizes = [...state.quizes, { questions, category-id }]
+  { ...state, quizes, quiz-in-creation: undefined  }
+
+
 
 module.exports = (state = initial-state, action) ->
   console.log action, state
@@ -64,5 +78,11 @@ module.exports = (state = initial-state, action) ->
 
     case \QUIZ_CREATE_ADD_QUESTION
       create-quiz-add-question action.image, state
+
+    case \QUIZ_CREATE_SHOW_PREVIEW
+      create-quiz-show-preview state
+
+    case \QUIZ_CREATE_PUBLISH_CURRENT
+      create-quiz-publish-current state
 
     default state
