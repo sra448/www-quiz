@@ -1,12 +1,16 @@
 { connect } = require \react-redux
 { div, h1, a } = require \react-dom-factories
 { create-element } = require \react
+{ Button } = require \material-ui
 
 
 
 create-factory = (component) ->
   (...args) ->
     create-element component, ...args
+
+
+button = create-factory Button
 
 
 
@@ -25,8 +29,8 @@ map-dispatch-to-props = (dispatch) ->
 main = ({ on-create-click }) ->
   div {},
     h1 {}, "www quiz"
-    a {}, "Play"
-    a { on-click: on-create-click }, "Create"
+    button {}, "Play"
+    button { on-click: on-create-click }, "Create"
 
 
 
