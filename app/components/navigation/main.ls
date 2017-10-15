@@ -8,6 +8,13 @@ button = create-factory Button
 
 
 
+# require the styles
+
+
+require "./styles.scss"
+
+
+
 # React Redux Bindings
 
 
@@ -23,10 +30,12 @@ map-dispatch-to-props = (dispatch) ->
 
 
 main = ({ on-play-click, on-create-click }) ->
-  div {},
+  div { class-name: "navigation" },
     h1 {}, "www quiz"
-    button { on-click: on-play-click }, "Play"
-    button { on-click: on-create-click }, "Create"
+    div {},
+      button { on-click: on-play-click, color: "primary", raised: true }, "Play"
+    div {},
+      button { on-click: on-create-click, color: "accent", raised: true }, "Create"
 
 
 

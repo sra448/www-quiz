@@ -2,10 +2,12 @@
 { div, h1, input, img, label } = require \react-dom-factories
 { create-factory } = require \react
 { Button } = require \material-ui
+Add-icon = require "material-ui-icons/Add"
 
 
 camera-button = require "./camera-button.ls"
 button = create-factory Button
+add-icon = create-factory Add-icon
 
 
 
@@ -32,14 +34,16 @@ map-dispatch-to-props = (dispatch) ->
 
 main = ({ current-question-id, questions, on-answer-change, on-next-click, on-final-click }) ->
   { image, answers } = questions[current-question-id]
+  button-props = { fab: true }
+
   div {},
     input { value: answers[0], on-change: on-answer-change 0 }
     input { value: answers[1], on-change: on-answer-change 1 }
     input { value: answers[2], on-change: on-answer-change 2 }
     if current-question-id < 3
-      camera-button { id: "next", on-click: on-next-click }, "Weiter"
+      camera-button { button-props, id: "next", on-click: on-next-click }
     else
-      button { on-click: on-final-click }, "Weiter"
+      button { on-click: on-final-click, fab: true }
     img { src: image }
 
 
