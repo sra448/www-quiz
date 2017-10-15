@@ -24,9 +24,9 @@ on-image-change = (id, callback) ->
 # Main Component
 
 
-module.exports = ({ id, on-click }, children) ->
+module.exports = ({ id, on-click, button-props }, children) ->
   on-change = on-image-change id, on-click
   div {},
     input { id, on-change, type: "file", accept: "image/*", capture: "camera" }
     label { html-for: id },
-      button { component: "span" }, children
+      button { ...button-props, component: "span" }, children

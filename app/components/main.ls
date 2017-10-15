@@ -9,6 +9,13 @@ create-quiz-dialog = require "./create-quiz/main.ls"
 
 
 
+# require the styles
+
+
+require "./styles.scss"
+
+
+
 # React Redux Bindings
 
 

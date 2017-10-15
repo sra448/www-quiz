@@ -21,11 +21,12 @@ map-dispatch-to-props = (dispatch) ->
 
 
 main = ({ on-category-click }) ->
-  div {},
+  button-props = { raised: true }
+  div { class-name: "categories" },
     h1 {}, "Quiz erstellen"
-    camera-button { id: "category1", on-click: on-category-click 1 }, "Wer"
-    camera-button { id: "category2", on-click: on-category-click 2 }, "Wo"
-    camera-button { id: "category3", on-click: on-category-click 3 }, "Was"
+    camera-button { button-props, id: "category1", on-click: on-category-click 1 }, "Wer"
+    camera-button { button-props, id: "category2", on-click: on-category-click 2 }, "Wo"
+    camera-button { button-props, id: "category3", on-click: on-category-click 3 }, "Was"
 
 
 
