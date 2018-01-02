@@ -1,4 +1,4 @@
-{ values, shuffle } = require \lodash
+{ values, shuffle, random } = require \lodash
 
 
 # State Definitions
@@ -82,8 +82,9 @@ create-quiz-publish-current = (state) ->
 # Play a quiz
 
 
-load-latest-quiz = (state) ->
-  quiz = state.quizes[state.quizes.length - 1] || {}
+load-random-quiz = (state) ->
+  id = random 0, state.quizes.length
+  quiz = state.quizes[id] || {}
   questions = quiz.questions.map (q) ->
     { ...q, letters: shuffle q.answer }
 
@@ -103,9 +104,15 @@ current-quiz-choose-answer-letter = (state, letter) ->
 
 
 load-next-question = (state) ->
-  current-question-id = state.quiz-in-play.current-question-id + 1
-  quiz-in-play = { ...state.quiz-in-play, current-question-id, current-answer: "" }
-  { ...state, quiz-in-play }
+  if state.quiz-in-play.current-question-id == 3
+    quiz-in-play = { ...quiz-in-play, completed: true }
+    { ...state, quiz-in-play }
+
+  else
+    current-question-id = state.quiz-in-play.current-question-id + 1
+    quiz-in-play = { ...state.quiz-in-play, current-question-id, current-answer: "" }
+
+    { ...state, quiz-in-play }
 
 
 maybe-finish-quiz = (state) ->
@@ -127,7 +134,7 @@ module.exports = (state = initial-state, action) ->
   switch action.type
 
     case \QUIZ_PLAY
-      load-latest-quiz state
+      load-random-quiz state
 
     case \QUIZ_PLAY_ANSWER_CHOOSE_LETTER
       current-quiz-choose-answer-letter state, action.letter
