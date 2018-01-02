@@ -26,13 +26,12 @@ map-dispatch-to-props = (dispatch) ->
 
 
 main = ({ questions, current-question-id, on-answer-click }) ->
-  { image, answers } = questions[current-question-id]
+  { image, answers, letters } = questions[current-question-id - 1]
 
   div {},
     img { src: image }
-    button { on-click: on-answer-click 0 }, answers[0]
-    button { on-click: on-answer-click 1 }, answers[1]
-    button { on-click: on-answer-click 2 }, answers[2]
+    letters.map (l) ->
+      div { class-name: "letter" }, l
 
 
 

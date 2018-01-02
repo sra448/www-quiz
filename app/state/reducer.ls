@@ -1,3 +1,6 @@
+{ values, shuffle } = require \lodash
+
+
 # State Definitions
 
 
@@ -23,14 +26,11 @@ initial-create-quiz-state =
 
 initial-create-question-state =
   image: undefined
-  answers:
-    0: "foo" # first value is the correct answer
-    1: "bar"
-    2: "cis"
+  answer: ""
 
 
 
-# Play a quiz
+# Create a quiz
 
 
 create-quiz = (state) ->
@@ -51,12 +51,12 @@ create-quiz-add-question = (image, state) -->
   { ...state, quiz-in-creation }
 
 
-create-quiz-change-question-answer = (state, id, text) ->
+create-quiz-change-question-answer = (state, answer) ->
   { quiz-in-creation } = state
   { current-question-id } = quiz-in-creation
+
   current-question = quiz-in-creation.questions[current-question-id]
-  answers = { ...current-question.answers, "#{id}": text }
-  question = { ...current-question, answers }
+  question = { ...current-question, answer }
   questions = { ...quiz-in-creation.questions, "#{current-question-id}": question }
   quiz-in-creation = { ...state.quiz-in-creation, questions }
 
@@ -71,20 +71,21 @@ create-quiz-show-preview = (state) ->
 
 create-quiz-publish-current = (state) ->
   { questions, category-id } = state.quiz-in-creation
-  quizes = [...state.quizes, { questions, category-id }]
+  quizes = [...state.quizes, { questions: values questions, category-id }]
   { ...state, quizes, quiz-in-creation: undefined  }
 
 
 
 
-
-
-# Create a quiz
+# Play a quiz
 
 
 load-latest-quiz = (state) ->
   quiz = state.quizes[state.quizes.length - 1] || {}
-  quiz-in-play = { ...initial-play-quiz-state, ...quiz }
+  questions = quiz.questions.map (q) ->
+    { ...q, letters: shuffle q.answer }
+
+  quiz-in-play = { ...initial-play-quiz-state, ...quiz, questions }
   { ...state, quiz-in-play }
 
 
@@ -128,7 +129,7 @@ module.exports = (state = initial-state, action) ->
         |> create-quiz-add-question action.image
 
     case \QUIZ_CREATE_QUESTION_ANSWER_CHANGE
-      create-quiz-change-question-answer state, action.id, action.text
+      create-quiz-change-question-answer state, action.text
 
     case \QUIZ_CREATE_ADD_QUESTION
       create-quiz-add-question action.image, state
