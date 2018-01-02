@@ -1,4 +1,4 @@
-{ values, shuffle, random } = require \lodash
+{ values, shuffle, random, take } = require \lodash
 
 
 # State Definitions
@@ -83,13 +83,19 @@ create-quiz-publish-current = (state) ->
 
 
 load-random-quiz = (state) ->
-  id = random 0, state.quizes.length
+  id = random 0, state.quizes.length - 1
   quiz = state.quizes[id] || {}
   questions = quiz.questions.map (q) ->
-    { ...q, letters: shuffle q.answer }
+    { ...q, letters: get-letters-for q.answer }
 
   quiz-in-play = { ...initial-play-quiz-state, ...quiz, questions }
   { ...state, quiz-in-play }
+
+
+get-letters-for = (word) ->
+  amount = word.length * 2 + 4
+  shuffle take [...word, ...([0 to amount].map -> String.from-char-code random 97, 122)], amount
+
 
 
 current-quiz-choose-answer-letter = (state, letter) ->
