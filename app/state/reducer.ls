@@ -104,7 +104,7 @@ current-quiz-choose-answer-letter = (state, letter) ->
 
 load-next-question = (state) ->
   current-question-id = state.quiz-in-play.current-question-id + 1
-  quiz-in-play = { ...state.quiz-in-play, current-question-id }
+  quiz-in-play = { ...state.quiz-in-play, current-question-id, current-answer: "" }
   { ...state, quiz-in-play }
 
 
