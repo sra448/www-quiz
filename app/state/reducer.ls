@@ -93,7 +93,7 @@ load-random-quiz = (state) ->
 
 
 get-letters-for = (word) ->
-  amount = word.length * 2 + 4
+  amount = word.length * 2 + 2
   shuffle take [...word, ...([0 to amount].map -> String.from-char-code random 97, 122)], amount
 
 
