@@ -13,6 +13,7 @@ initial-state =
 initial-play-quiz-state =
   category-id: undefined
   questions: []
+  current-answer: ""
   current-question-id: 1
   score: 0
 
@@ -90,10 +91,20 @@ load-latest-quiz = (state) ->
   { ...state, quiz-in-play }
 
 
-current-quiz-choose-answer = (state, id) ->
+current-quiz-choose-answer-letter = (state, letter) ->
+  answer = state.quiz-in-play.questions[state.quiz-in-play.current-question-id - 1].answer
+  current-answer = state.quiz-in-play.current-answer + letter
+
+  if answer.starts-with current-answer
+    quiz-in-play = { ...state.quiz-in-play, current-answer }
+    { ...state, quiz-in-play }
+  else
+    state
+
+
+load-next-question = (state) ->
   current-question-id = state.quiz-in-play.current-question-id + 1
-  score = id == 0 ? score + 1 : score
-  quiz-in-play = { ...state.quiz-in-play, current-question-id, score }
+  quiz-in-play = { ...state.quiz-in-play, current-question-id }
   { ...state, quiz-in-play }
 
 
@@ -118,9 +129,12 @@ module.exports = (state = initial-state, action) ->
     case \QUIZ_PLAY
       load-latest-quiz state
 
-    case \QUIZ_PLAY_ANSWER_CHOOSE
-      current-quiz-choose-answer state, state.id
-        |> maybe-finish-quiz
+    case \QUIZ_PLAY_ANSWER_CHOOSE_LETTER
+      current-quiz-choose-answer-letter state, action.letter
+        # |> maybe-finish-quiz
+
+    case \QUIZ_PLAY_NEXT_QUESTION
+      load-next-question state
 
     case \QUIZ_CREATE
       create-quiz state

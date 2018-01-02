@@ -17,3 +17,16 @@ input[type='file'] {
     height: 60px;
   }
 }
+
+.letter {
+  border: 1px solid black;
+  margin: 5px;
+  display: inline-block;
+  width: 25px;
+  height: 25px;
+  text-transform: capitalize;
+}
+
+.answer {
+  border: 1px solid grey;
+}
