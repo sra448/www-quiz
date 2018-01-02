@@ -18,9 +18,9 @@ map-state-to-props = ({ quiz-in-play }) ->
 map-dispatch-to-props = (dispatch) ->
   on-next: ->
     dispatch { type: \QUIZ_PLAY_NEXT_QUESTION }
-  on-letter-click: (letter) ->
+  on-letter-click: (letter, id) ->
     ->
-      dispatch { type: \QUIZ_PLAY_ANSWER_CHOOSE_LETTER, letter }
+      dispatch { type: \QUIZ_PLAY_ANSWER_CHOOSE_LETTER, letter, id }
   on-new-game: ->
     dispatch { type: \QUIZ_PLAY }
 
@@ -29,15 +29,16 @@ map-dispatch-to-props = (dispatch) ->
 # Main Component
 
 
-main = ({ questions, current-answer, completed, current-question-id,  on-new-game, on-letter-click, on-next }) ->
+main = ({ questions, current-answer, completed, used-letters, current-question-id, on-new-game, on-letter-click, on-next }) ->
   if !completed
     { image, answer, letters } = questions[current-question-id - 1]
 
     div {},
       img { src: image }
       div {},
-        letters.map (l) ->
-          div { class-name: "letter", on-click: on-letter-click l }, l
+        letters.map (l, id) ->
+          class-name = if id in used-letters then "letter used" else "letter"
+          div { class-name, on-click: on-letter-click l, id }, l
       div {},
         [...answer].map (l, id) ->
           div { class-name: "answer letter" }, current-answer[id] || ""

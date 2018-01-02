@@ -16,6 +16,8 @@ initial-play-quiz-state =
   current-answer: ""
   current-question-id: 1
   score: 0
+  used-letters: []
+  completed: false
 
 
 initial-create-quiz-state =
@@ -78,7 +80,6 @@ create-quiz-publish-current = (state) ->
 
 
 
-
 # Play a quiz
 
 
@@ -98,12 +99,14 @@ get-letters-for = (word) ->
 
 
 
-current-quiz-choose-answer-letter = (state, letter) ->
+current-quiz-choose-answer-letter = (state, letter, id) ->
   answer = state.quiz-in-play.questions[state.quiz-in-play.current-question-id - 1].answer
   current-answer = state.quiz-in-play.current-answer + letter
 
   if answer.starts-with current-answer
-    quiz-in-play = { ...state.quiz-in-play, current-answer }
+    used-letters = [...state.quiz-in-play.used-letters, id]
+    quiz-in-play = { ...state.quiz-in-play, current-answer, used-letters }
+
     { ...state, quiz-in-play }
   else
     state
@@ -116,7 +119,7 @@ load-next-question = (state) ->
 
   else
     current-question-id = state.quiz-in-play.current-question-id + 1
-    quiz-in-play = { ...state.quiz-in-play, current-question-id, current-answer: "" }
+    quiz-in-play = { ...state.quiz-in-play, current-question-id, current-answer: "", used-letters: [] }
 
     { ...state, quiz-in-play }
 
@@ -143,7 +146,7 @@ module.exports = (state = initial-state, action) ->
       load-random-quiz state
 
     case \QUIZ_PLAY_ANSWER_CHOOSE_LETTER
-      current-quiz-choose-answer-letter state, action.letter
+      current-quiz-choose-answer-letter state, action.letter, action.id
         # |> maybe-finish-quiz
 
     case \QUIZ_PLAY_NEXT_QUESTION

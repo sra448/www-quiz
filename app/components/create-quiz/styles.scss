@@ -27,6 +27,11 @@ input[type='file'] {
   text-transform: capitalize;
 }
 
+.used {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
 .answer {
   border: 1px solid grey;
 }
