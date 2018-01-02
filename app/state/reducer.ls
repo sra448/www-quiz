@@ -7,7 +7,7 @@
 initial-state =
   quiz-in-creation: undefined
   quiz-in-play: undefined
-  quizes: []
+  quizes: JSON.parse (local-storage.get-item "quizes") || "[]"
 
 
 initial-play-quiz-state =
@@ -72,6 +72,7 @@ create-quiz-show-preview = (state) ->
 create-quiz-publish-current = (state) ->
   { questions, category-id } = state.quiz-in-creation
   quizes = [...state.quizes, { questions: values questions, category-id }]
+  local-storage.set-item "quizes", JSON.stringify quizes
   { ...state, quizes, quiz-in-creation: undefined  }
 
 
