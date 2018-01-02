@@ -1,17 +1,23 @@
+{ values, shuffle, random, take } = require \lodash
+
+
 # State Definitions
 
 
 initial-state =
   quiz-in-creation: undefined
   quiz-in-play: undefined
-  quizes: []
+  quizes: JSON.parse (local-storage.get-item "quizes") || "[]"
 
 
 initial-play-quiz-state =
   category-id: undefined
   questions: []
+  current-answer: ""
   current-question-id: 1
   score: 0
+  used-letters: []
+  completed: false
 
 
 initial-create-quiz-state =
@@ -23,14 +29,11 @@ initial-create-quiz-state =
 
 initial-create-question-state =
   image: undefined
-  answers:
-    0: "foo" # first value is the correct answer
-    1: "bar"
-    2: "cis"
+  answer: ""
 
 
 
-# Play a quiz
+# Create a quiz
 
 
 create-quiz = (state) ->
@@ -51,12 +54,12 @@ create-quiz-add-question = (image, state) -->
   { ...state, quiz-in-creation }
 
 
-create-quiz-change-question-answer = (state, id, text) ->
+create-quiz-change-question-answer = (state, answer) ->
   { quiz-in-creation } = state
   { current-question-id } = quiz-in-creation
+
   current-question = quiz-in-creation.questions[current-question-id]
-  answers = { ...current-question.answers, "#{id}": text }
-  question = { ...current-question, answers }
+  question = { ...current-question, answer }
   questions = { ...quiz-in-creation.questions, "#{current-question-id}": question }
   quiz-in-creation = { ...state.quiz-in-creation, questions }
 
@@ -71,28 +74,54 @@ create-quiz-show-preview = (state) ->
 
 create-quiz-publish-current = (state) ->
   { questions, category-id } = state.quiz-in-creation
-  quizes = [...state.quizes, { questions, category-id }]
+  quizes = [...state.quizes, { questions: values questions, category-id }]
+  local-storage.set-item "quizes", JSON.stringify quizes
   { ...state, quizes, quiz-in-creation: undefined  }
 
 
 
+# Play a quiz
 
 
+load-random-quiz = (state) ->
+  id = random 0, state.quizes.length - 1
+  quiz = state.quizes[id] || {}
+  questions = quiz.questions.map (q) ->
+    { ...q, letters: get-letters-for q.answer }
 
-# Create a quiz
-
-
-load-latest-quiz = (state) ->
-  quiz = state.quizes[state.quizes.length - 1] || {}
-  quiz-in-play = { ...initial-play-quiz-state, ...quiz }
+  quiz-in-play = { ...initial-play-quiz-state, ...quiz, questions }
   { ...state, quiz-in-play }
 
 
-current-quiz-choose-answer = (state, id) ->
-  current-question-id = state.quiz-in-play.current-question-id + 1
-  score = id == 0 ? score + 1 : score
-  quiz-in-play = { ...state.quiz-in-play, current-question-id, score }
-  { ...state, quiz-in-play }
+get-letters-for = (word) ->
+  amount = word.length * 2 + 2
+  shuffle take [...word, ...([0 to amount].map -> String.from-char-code random 97, 122)], amount
+
+
+
+current-quiz-choose-answer-letter = (state, letter, id) ->
+  answer = state.quiz-in-play.questions[state.quiz-in-play.current-question-id - 1].answer
+  current-answer = state.quiz-in-play.current-answer + letter
+
+  if answer.starts-with current-answer
+    used-letters = [...state.quiz-in-play.used-letters, id]
+    quiz-in-play = { ...state.quiz-in-play, current-answer, used-letters }
+
+    { ...state, quiz-in-play }
+  else
+    state
+
+
+load-next-question = (state) ->
+  if state.quiz-in-play.current-question-id == 3
+    quiz-in-play = { ...quiz-in-play, completed: true }
+    { ...state, quiz-in-play }
+
+  else
+    current-question-id = state.quiz-in-play.current-question-id + 1
+    quiz-in-play = { ...state.quiz-in-play, current-question-id, current-answer: "", used-letters: [] }
+
+    { ...state, quiz-in-play }
 
 
 maybe-finish-quiz = (state) ->
@@ -114,11 +143,14 @@ module.exports = (state = initial-state, action) ->
   switch action.type
 
     case \QUIZ_PLAY
-      load-latest-quiz state
+      load-random-quiz state
 
-    case \QUIZ_PLAY_ANSWER_CHOOSE
-      current-quiz-choose-answer state, state.id
-        |> maybe-finish-quiz
+    case \QUIZ_PLAY_ANSWER_CHOOSE_LETTER
+      current-quiz-choose-answer-letter state, action.letter, action.id
+        # |> maybe-finish-quiz
+
+    case \QUIZ_PLAY_NEXT_QUESTION
+      load-next-question state
 
     case \QUIZ_CREATE
       create-quiz state
@@ -128,7 +160,7 @@ module.exports = (state = initial-state, action) ->
         |> create-quiz-add-question action.image
 
     case \QUIZ_CREATE_QUESTION_ANSWER_CHANGE
-      create-quiz-change-question-answer state, action.id, action.text
+      create-quiz-change-question-answer state, action.text
 
     case \QUIZ_CREATE_ADD_QUESTION
       create-quiz-add-question action.image, state
