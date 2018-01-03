@@ -28,13 +28,12 @@ map-state-to-props = ({ quiz-in-creation, quiz-in-play }) ->
 
 
 main = ({ quiz-in-play, quiz-in-creation }) ->
-  div {},
-    if quiz-in-play?
-      play-quiz-dialog {}
-    else if quiz-in-creation?
-      create-quiz-dialog {}
-    else
-      navigation {}
+  if quiz-in-play?
+    play-quiz-dialog {}
+  else if quiz-in-creation?
+    create-quiz-dialog {}
+  else
+    navigation {}
 
 
 # Connected Main Component

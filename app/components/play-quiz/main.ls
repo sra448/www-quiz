@@ -29,11 +29,11 @@ map-dispatch-to-props = (dispatch) ->
 # Main Component
 
 
-main = ({ questions, current-answer, completed, used-letters, current-question-id, on-new-game, on-letter-click, on-next }) ->
+main = ({ questions, current-answer, completed, color, used-letters, current-question-id, on-new-game, on-letter-click, on-next }) ->
   if !completed
     { image, answer, letters } = questions[current-question-id - 1]
 
-    div {},
+    div { style: background-color: color },
       img { src: image }
       div {},
         letters.map (l, id) ->

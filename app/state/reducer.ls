@@ -17,6 +17,7 @@ initial-play-quiz-state =
   current-question-id: 1
   score: 0
   used-letters: []
+  bg-color: "transparent"
   completed: false
 
 
@@ -124,6 +125,11 @@ load-next-question = (state) ->
     { ...state, quiz-in-play }
 
 
+change-bg-color = (state, color) ->
+  quiz-in-play = { ...state.quiz-in-play, color: "#" + color }
+  { ...state, quiz-in-play }
+
+
 maybe-finish-quiz = (state) ->
   current-question-id = state.quiz-in-play.current-question-id
 
@@ -141,6 +147,9 @@ module.exports = (state = initial-state, action) ->
   console.log action, state
 
   switch action.type
+
+    case \QUIZ_CHANGE_COLOR
+      change-bg-color state, action.color
 
     case \QUIZ_PLAY
       load-random-quiz state
