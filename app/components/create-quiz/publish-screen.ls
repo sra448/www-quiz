@@ -11,23 +11,23 @@ button = create-factory Button
 # React Redux Bindings
 
 
-map-state-to-props = ({ quiz-in-creation }) ->
-  quiz-in-creation
+map-state-to-props = ({ create }) ->
+  create
 
 
 map-dispatch-to-props = (dispatch) ->
-  on-publish: ->
-    dispatch { type: \QUIZ_CREATE_PUBLISH_CURRENT }
+  on-publish: (questions, category-id) ->
+    ->
+      dispatch { type: \QUIZ_CREATE_PUBLISH, questions, category-id }
 
 
 
 # Main Component
 
 
-main = ({ on-publish }) ->
+main = ({ questions, category-id, on-publish }) ->
   div {},
-    "you've done it"
-    button { on-click: on-publish }, "publish"
+    button { on-click: on-publish questions, category-id }, "publish"
 
 
 

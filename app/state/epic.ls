@@ -19,8 +19,8 @@ get-color = (img) ->
       context.draw-image image, 0, 0
 
       image-data = context.get-image-data 0, 0, canvas.width, canvas.height
-
       index = (image.height * (image-data.width - 1) + 1) * 4
+
       red = rgb-to-hex image-data.data[index]
       green = rgb-to-hex image-data.data[index + 1]
       blue = rgb-to-hex image-data.data[index + 2]
@@ -37,8 +37,8 @@ module.exports = (action$, store) ->
   action$
     .of-type \QUIZ_PLAY, \QUIZ_PLAY_NEXT_QUESTION
     .flat-map ->
-      { quiz-in-play } = store.get-state()
-      image = quiz-in-play.questions[quiz-in-play.current-question-id - 1].image
+      { play } = store.get-state()
+      image = play.questions[play.current-question-id - 1].image
       get-color image
     .map (color) ->
       { type: \QUIZ_CHANGE_COLOR, color }

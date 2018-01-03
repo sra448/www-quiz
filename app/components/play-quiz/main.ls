@@ -11,8 +11,8 @@ button = create-factory Button
 # React Redux Bindings
 
 
-map-state-to-props = ({ quiz-in-play }) ->
-  quiz-in-play
+map-state-to-props = ({ play }) ->
+  play
 
 
 map-dispatch-to-props = (dispatch) ->

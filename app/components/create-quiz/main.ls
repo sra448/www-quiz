@@ -18,8 +18,8 @@ require "./styles.scss"
 # React Redux Bindings
 
 
-map-state-to-props = ({ quiz-in-creation }) ->
-  quiz-in-creation
+map-state-to-props = ({ create }) ->
+  create
 
 
 
