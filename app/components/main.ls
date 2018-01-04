@@ -19,22 +19,24 @@ require "./styles.scss"
 # React Redux Bindings
 
 
-map-state-to-props = ({ quiz-in-creation, quiz-in-play }) ->
-  { quiz-in-creation, quiz-in-play }
+map-state-to-props = ({ create, play }) ->
+  {
+    is-running: play.questions.length > 0,
+    is-creating: create.is-creating
+  }
 
 
 
 # Main Component
 
 
-main = ({ quiz-in-play, quiz-in-creation }) ->
-  div {},
-    if quiz-in-play?
-      play-quiz-dialog {}
-    else if quiz-in-creation?
-      create-quiz-dialog {}
-    else
-      navigation {}
+main = ({ is-running, is-creating }) ->
+  if is-running
+    play-quiz-dialog {}
+  else if is-creating
+    create-quiz-dialog {}
+  else
+    navigation {}
 
 
 # Connected Main Component

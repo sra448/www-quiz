@@ -14,8 +14,8 @@ add-icon = create-factory Add-icon
 # React Redux Bindings
 
 
-map-state-to-props = ({ quiz-in-creation }) ->
-  quiz-in-creation
+map-state-to-props = ({ create }) ->
+  create
 
 
 map-dispatch-to-props = (dispatch) ->

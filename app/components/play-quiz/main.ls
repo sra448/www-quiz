@@ -11,8 +11,8 @@ button = create-factory Button
 # React Redux Bindings
 
 
-map-state-to-props = ({ quiz-in-play }) ->
-  quiz-in-play
+map-state-to-props = ({ play }) ->
+  play
 
 
 map-dispatch-to-props = (dispatch) ->
@@ -26,24 +26,38 @@ map-dispatch-to-props = (dispatch) ->
 
 
 
+# Components
+
+
+letter-input = ({ letters, used-letters, palette, on-letter-click }) ->
+  div { class-name: "letters" },
+    letters.map (l, id) ->
+      class-name = if id in used-letters then "input-letter used" else "input-letter"
+      style = { background: palette.LightVibrant?.get-hex(), border-color: palette.DarkVibrant?.get-hex() }
+      div { class-name, style, on-click: (on-letter-click l, id) }, l
+
+
+letter-answer = ({ answer, current-answer }) ->
+  div {},
+    [...answer].map (_, id) ->
+      div { class-name: "answer-letter" }, current-answer[id]
+
+
+
 # Main Component
 
 
-main = ({ questions, current-answer, completed, used-letters, current-question-id, on-new-game, on-letter-click, on-next }) ->
+main = ({ questions, current-answer, completed, palette, used-letters, current-question-id, on-new-game, on-letter-click, on-next }) ->
   if !completed
     { image, answer, letters } = questions[current-question-id - 1]
 
-    div {},
+    div { style: background-color: palette.LightMuted?.get-hex() },
       img { src: image }
-      div {},
-        letters.map (l, id) ->
-          class-name = if id in used-letters then "letter used" else "letter"
-          div { class-name, on-click: on-letter-click l, id }, l
-      div {},
-        [...answer].map (l, id) ->
-          div { class-name: "answer letter" }, current-answer[id] || ""
-      if answer == current-answer
-        button { on-click: on-next }, "bravo, next"
+      div { class-name: "input" },
+        letter-answer { answer, current-answer }
+        letter-input { letters, used-letters, palette, on-letter-click }
+        if answer == current-answer
+          button { on-click: on-next }, "bravo, next"
   else
     div {},
       h1 {}, "thanks"
