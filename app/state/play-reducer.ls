@@ -56,7 +56,7 @@ load-next-question = (state) ->
 
 
 change-bg-color = (state, color) ->
-  { ...state, color: "#" + color }
+  { ...state, color }
 
 
 create-quiz-publish = (state, questions, category-id) ->

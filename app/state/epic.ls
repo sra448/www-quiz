@@ -1,4 +1,5 @@
 { Observable } = require \rxjs
+Vibrant = require \node-vibrant
 
 
 rgb-to-hex = (rgb) ->
@@ -7,30 +8,11 @@ rgb-to-hex = (rgb) ->
   hex
 
 
-get-color = (img) ->
-  new Observable (observer) ->
-    image = new Image()
-    image.onload = ->
-      canvas = document.create-element "canvas"
-      canvas.width = image.width
-      canvas.height = image.height
-
-      context = canvas.get-context "2d"
-      context.draw-image image, 0, 0
-
-      image-data = context.get-image-data 0, 0, canvas.width, canvas.height
-      index = (image.height * (image-data.width - 1) + 1) * 4
-
-      red = rgb-to-hex image-data.data[index]
-      green = rgb-to-hex image-data.data[index + 1]
-      blue = rgb-to-hex image-data.data[index + 2]
-
-      observer.next "#{red}#{green}#{blue}"
-
-    image.src = img
-
-    (->) # this is the teardown function, it does nothing but needs to be returned
-
+get-palette = (img) ->
+  Observable.from-promise do
+    Vibrant
+      .from img
+      .get-palette()
 
 
 module.exports = (action$, store) ->
@@ -39,8 +21,9 @@ module.exports = (action$, store) ->
     .flat-map ->
       { play } = store.get-state()
       image = play.questions[play.current-question-id - 1].image
-      get-color image
-    .map (color) ->
-      { type: \QUIZ_CHANGE_COLOR, color }
+      get-palette image
+    .map (palette) ->
+      # debugger
+      { type: \QUIZ_CHANGE_COLOR, color: palette.DarkVibrant.get-hex() }
 
 
