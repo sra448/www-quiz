@@ -8,7 +8,7 @@ initial-state =
   current-question-id: 1
   current-answer: ""
   used-letters: []
-  bg-color: "transparent"
+  palette: {}
   completed: false
 
 
@@ -55,8 +55,8 @@ load-next-question = (state) ->
     { ...state, current-question-id, current-answer: "", used-letters: [] }
 
 
-change-bg-color = (state, color) ->
-  { ...state, color }
+change-bg-palette = (state, palette) ->
+  { ...state, palette }
 
 
 create-quiz-publish = (state, questions, category-id) ->
@@ -84,7 +84,7 @@ module.exports = (state = initial-state, action) ->
       load-next-question state
 
     case \QUIZ_CHANGE_COLOR
-      change-bg-color state, action.color
+      change-bg-palette state, action.palette
 
     case \QUIZ_CREATE_PUBLISH
       create-quiz-publish state, action.questions, action.category-id

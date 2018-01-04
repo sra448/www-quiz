@@ -17,21 +17,3 @@ input[type='file'] {
     height: 60px;
   }
 }
-
-.letter {
-  border: 1px solid black;
-  margin: 5px;
-  display: inline-block;
-  width: 25px;
-  height: 25px;
-  text-transform: capitalize;
-}
-
-.used {
-  opacity: 0.4;
-  pointer-events: none;
-}
-
-.answer {
-  border: 1px solid grey;
-}

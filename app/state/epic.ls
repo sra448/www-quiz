@@ -23,7 +23,6 @@ module.exports = (action$, store) ->
       image = play.questions[play.current-question-id - 1].image
       get-palette image
     .map (palette) ->
-      # debugger
-      { type: \QUIZ_CHANGE_COLOR, color: palette.DarkVibrant.get-hex() }
+      { type: \QUIZ_CHANGE_COLOR, palette }
 
 
