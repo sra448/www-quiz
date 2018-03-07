@@ -1,10 +1,10 @@
 module.exports = {
   entry: {
-    "quiz": "./app/quiz.ls"
+    "index": "./app/index.ls"
   },
   output: {
     path: __dirname,
-    filename: "app/[name].js"
+    filename: "public/[name].js"
   },
   module: {
     loaders: [

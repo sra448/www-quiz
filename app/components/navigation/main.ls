@@ -1,10 +1,4 @@
-{ connect } = require \react-redux
-{ div, h1, a } = require \react-dom-factories
-{ create-factory } = require \react
-{ Button } = require \material-ui
-
-
-button = create-factory Button
+{ div, h1, a, button } = require "../../dom-elements.ls"
 
 
 
@@ -15,31 +9,13 @@ require "./styles.scss"
 
 
 
-# React Redux Bindings
-
-
-map-dispatch-to-props = (dispatch) ->
-  on-play-click: ->
-    dispatch { type: \QUIZ_PLAY }
-  on-create-click: ->
-    dispatch { type: \QUIZ_CREATE }
-
-
-
 # Main Component
 
 
-main = ({ on-play-click, on-create-click }) ->
+module.exports = ({ actions }) ->
   div { class-name: "navigation" },
-    h1 {}, "www quiz"
+    h1 {}, "QUIZ OHNE NAME"
+    # div {},
+    #   button { onclick: on-play-click }, "Play"
     div {},
-      button { on-click: on-play-click, color: "primary", raised: true }, "Play"
-    div {},
-      button { on-click: on-create-click, color: "accent", raised: true }, "Create"
-
-
-
-# Connected Main Component
-
-
-module.exports = create-factory <| connect undefined, map-dispatch-to-props <| main
+      button { onclick: actions.create.start }, "asdf"

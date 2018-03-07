@@ -1,10 +1,6 @@
-{ connect } = require \react-redux
-{ div, h1, input, img, label } = require \react-dom-factories
-{ create-factory } = require \react
-{ Button } = require \material-ui
+{ div, button, h1, input, img, label } = require "../../dom-elements.ls"
 
 
-button = create-factory Button
 
 
 
@@ -34,7 +30,7 @@ letter-input = ({ letters, used-letters, palette, on-letter-click }) ->
     letters.map (l, id) ->
       class-name = if id in used-letters then "input-letter used" else "input-letter"
       style = { background: palette.LightVibrant?.get-hex(), border-color: palette.DarkVibrant?.get-hex() }
-      div { class-name, style, on-click: (on-letter-click l, id) }, l
+      div { class-name, style, onclick: (on-letter-click l, id) }, l
 
 
 letter-answer = ({ answer, current-answer }) ->
@@ -57,11 +53,11 @@ main = ({ questions, current-answer, completed, palette, used-letters, current-q
         letter-answer { answer, current-answer }
         letter-input { letters, used-letters, palette, on-letter-click }
         if answer == current-answer
-          button { on-click: on-next }, "bravo, next"
+          button { onclick: on-next }, "bravo, next"
   else
     div {},
       h1 {}, "thanks"
-      button { on-click: on-new-game }, "weiter spielen"
+      button { onclick: on-new-game }, "weiter spielen"
       button {}, "quiz teilen"
       button {}, "eigenes quiz erstellen"
 

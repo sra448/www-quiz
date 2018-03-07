@@ -1,11 +1,8 @@
-{ create-factory } = require \react
-{ connect } = require \react-redux
-{ div } = require \react-dom-factories
-
-
 navigation = require "./navigation/main.ls"
-play-quiz-dialog = require "./play-quiz/main.ls"
+# play-quiz-dialog = require "./play-quiz/main.ls"
 create-quiz-dialog = require "./create-quiz/main.ls"
+
+{ div, h1, button } = require "../dom-elements.ls"
 
 
 
@@ -16,30 +13,21 @@ require "./styles.scss"
 
 
 
-# React Redux Bindings
-
-
-map-state-to-props = ({ create, play }) ->
-  {
-    is-running: play.questions.length > 0,
-    is-creating: create.is-creating
-  }
-
+foo = ->
+  debugger
 
 
 # Main Component
 
 
-main = ({ is-running, is-creating }) ->
-  if is-running
-    play-quiz-dialog {}
-  else if is-creating
-    create-quiz-dialog {}
+module.exports = (state, actions) ->
+  console.log("state", state)
+  console.log("actions", actions)
+
+  if false #state.play.is-running
+    # play-quiz-dialog {}
+    1 + 1
+  else if state.create.is-creating
+    create-quiz-dialog { state: state.create, actions: actions.create }
   else
-    navigation {}
-
-
-# Connected Main Component
-
-
-module.exports = create-factory <| connect map-state-to-props <| main
+    navigation { actions }

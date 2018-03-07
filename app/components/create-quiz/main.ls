@@ -1,7 +1,3 @@
-{ connect } = require \react-redux
-{ create-factory } = require \react
-
-
 categories = require "./category-chooser.ls"
 add-question-dialog = require "./add-question-dialog.ls"
 publish-screen = require "./publish-screen.ls"
@@ -15,28 +11,19 @@ require "./styles.scss"
 
 
 
-# React Redux Bindings
-
-
-map-state-to-props = ({ create }) ->
-  create
-
-
-
 # Main Component
 
 
-main = ({ category-id, is-finished }) ->
+module.exports = ({ state, actions }) ->
+  { category-id, is-finished } = state
+  
+  console.log "category-id, is-finished"
+  console.log category-id, is-finished
+  # debugger
+
   if !category-id?
-    categories {}
+    categories { state, actions }
   else if !is-finished
-    add-question-dialog {}
+    add-question-dialog { state, actions }
   else
-    publish-screen {}
-
-
-
-# Connected Main Component
-
-
-module.exports = create-factory <| connect map-state-to-props <| main
+    publish-screen { state, actions }

@@ -1,9 +1,4 @@
-{ div, input, label } = require \react-dom-factories
-{ create-factory } = require \react
-{ Button } = require \material-ui
-
-
-button = create-factory Button
+{ div, button, input, label } = require "../../dom-elements.ls"
 
 
 
@@ -14,7 +9,7 @@ on-image-change = (id, callback) ->
     reader = new FileReader()
 
     reader.add-event-listener "load", ({ target }) ->
-      callback { image: target.result }
+      callback target.result
     , false
 
     reader.read-as-data-URL file
@@ -24,9 +19,9 @@ on-image-change = (id, callback) ->
 # Main Component
 
 
-module.exports = ({ id, on-click, button-props }, children) ->
-  on-change = on-image-change id, on-click
+module.exports = ({ id, onclick, button-props }, children) ->
+  onchange = on-image-change id, onclick
   div {},
-    input { id, on-change, type: "file", accept: "image/*", capture: "camera" }
+    input { id, onchange, type: "file", accept: "image/*", capture: "camera" }
     label { html-for: id },
-      button { ...button-props, component: "span" }, children
+      children
