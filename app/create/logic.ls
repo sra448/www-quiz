@@ -30,11 +30,9 @@ change-current-answer = (state, answer) ->
 
 
 initial-state = {
-  is-creating: false
   category-id: undefined
   current-question-id: 0
   questions: {}
-  is-finished: false
 }
 
 
@@ -55,9 +53,6 @@ actions = {
 
   review: -> (state) ->
     { ...state, is-finished: true }
-
-  publish: -> (state) ->
-    { ...state, is-creating: false  }
 }
 
 
