@@ -1,4 +1,3 @@
-{ Observable } = require \rxjs
 { random, values, shuffle, take } = require \lodash
 Vibrant = require \node-vibrant
 
