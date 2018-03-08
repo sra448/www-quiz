@@ -3,26 +3,8 @@
 Vibrant = require \node-vibrant
 
 
-select-letter = (state, letter, id) ->
-  answer = state.questions[state.current-question-id - 1].answer
-  current-answer = state.current-answer + letter
 
-  if answer.starts-with current-answer
-    used-letters = [...state.used-letters, id]
-    { ...state, current-answer, used-letters }
-
-  else
-    state
-
-
-load-next-question = (state, actions) ->
-  if state.current-question-id == state.questions.length
-    { ...state, completed: true }
-
-  else
-    actions.reset-palette()
-    current-question-id = state.current-question-id + 1
-    { ...state, current-question-id, current-answer: "", used-letters: [] }
+# helper functions
 
 
 enhance-question = (question) ->
@@ -39,13 +21,6 @@ random-letter = ->
   String.from-char-code random 97, 122
 
 
-reset-palette = (state, actions) ->
-  image = state.questions[state.current-question-id].image
-  if image
-    get-palette(image)
-      .then(actions.set-palette)
-
-
 rgb-to-hex = (rgb) ->
   hex = Number(rgb).toString 16
   hex = "0" + hex if hex.length < 2
@@ -58,18 +33,58 @@ get-palette = (img) ->
     .get-palette()
 
 
-set-palette = (state, palette) ->
+
+# actions
+
+
+load-quiz = (quiz) -> (state, actions) ->
+  questions = values(quiz).map enhance-question
+  new-state = { ...initial-state, questions }
+  image = new-state.questions[0].image
+  actions.reset-palette image
+  new-state
+
+
+select-letter = ({ letter, id }) -> (state) ->
+  answer = state.questions[state.current-question-id].answer
+  current-answer = state.current-answer + letter
+
+  if answer.starts-with current-answer
+    used-letters = [...state.used-letters, id]
+    { ...state, current-answer, used-letters }
+
+  else
+    state
+
+
+next = -> (state, actions) ->
+  if state.current-question-id + 1 < state.questions.length
+    current-question-id = state.current-question-id + 1
+    new-state = { ...state, current-question-id, current-answer: "", used-letters: [] }
+    image = state.questions[current-question-id].image
+    actions.reset-palette image
+    new-state
+
+  else
+    { ...state, completed: true }
+
+
+reset-palette = (image) -> (state, actions) ->
+  get-palette(image)
+    .then(actions.set-palette)
+
+
+set-palette = (palette) -> (state) ->
   { ...state, palette }
 
 
-load-quiz = (state, quiz) ->
-  questions = values(quiz).map enhance-question
-  { ...state, questions }
+
+# module
 
 
 initial-state = {
   questions: []
-  current-question-id: 1
+  current-question-id: 0
   current-answer: ""
   used-letters: []
   palette: {}
@@ -77,20 +92,13 @@ initial-state = {
 }
 
 
-actions = {
-  select-letter: ({ letter, id }) -> (state) ->
-    select-letter state, letter, id
-  next: ->
-    load-next-question
-  reset-palette: ->
-    reset-palette
-  set-palette: (palette) ->
-    (state) ->
-      set-palette state, palette
-}
-
-
 module.exports = {
-  actions,
-  state: initial-state
+  state: initial-state,
+  actions: {
+    load-quiz,
+    select-letter,
+    next,
+    reset-palette,
+    set-palette
+  }
 }

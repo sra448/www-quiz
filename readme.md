@@ -24,18 +24,10 @@ Hyperapp
 - functional
 
 
-
-
-
-
-
-
-- very strict, actions cannot be handled in different "reducers"
+- very strict, actions cannot be handled by different "reducers"
 - you need to accurately model your state
-
 - no stateful components / no hidden state
 - no context (for connect function)
-
 - passing arguments all the way down / no connect function
 
 

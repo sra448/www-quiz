@@ -22,11 +22,11 @@ letter-answer = ({ answer, current-answer }) ->
 # Main Component
 
 
-module.exports = ({ state, actions }) ->
+module.exports = ({ state, actions, new-game }) ->
   { questions, current-answer, completed, palette, used-letters, current-question-id } = state
 
   if !completed
-    { image, answer, letters } = questions[current-question-id - 1]
+    { image, answer, letters } = questions[current-question-id]
 
     div { style: background-color: palette.LightMuted?.get-hex() },
       img { src: image }
@@ -38,6 +38,6 @@ module.exports = ({ state, actions }) ->
   else
     div {},
       h1 {}, "thanks"
-      button { onclick: actions.new-game }, "weiter spielen"
+      button { onclick: -> new-game() }, "weiter spielen"
       button {}, "quiz teilen"
       button {}, "eigenes quiz erstellen"
