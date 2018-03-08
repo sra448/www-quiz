@@ -48,7 +48,7 @@ actions = {
   add-question: (image) -> (state) ->
     add-question image, state
 
-  change-current-text: (text) -> (state) ->
+  change-current-answer: (text) -> (state) ->
     change-current-answer state, text
 
   review: -> (state) ->

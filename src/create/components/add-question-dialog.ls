@@ -8,9 +8,9 @@ module.exports = ({ state, actions }) ->
 
   div {},
     if current-question-id < 3
-      camera-button { id: "next", onclick: actions.addQuestion }, "Next"
+      camera-button { id: "next", onclick: actions.add-question }, "Next"
     else
       button { onclick: actions.review }, "Next"
 
-    input { value: answer, on-change: actions.changeCurrentAnswer }
+    input { value: answer, onchange: ({ target }) -> actions.change-current-answer target.value }
     img { src: image }

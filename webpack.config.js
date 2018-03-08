@@ -1,6 +1,6 @@
 module.exports = {
   entry: {
-    "index": "./app/index.ls"
+    "index": "./src/index.ls"
   },
   output: {
     path: __dirname,

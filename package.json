@@ -1,13 +1,9 @@
 {
   "name": "www-quiz",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
   "scripts": {
     "start": "webpack"
   },
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "hyperapp": "^1.1.2",
     "lodash": "^4.17.4",
@@ -15,11 +11,6 @@
     "rxjs": "^5.5.6"
   },
   "devDependencies": {
-    "@babel/core": "^7.0.0-beta.40",
-    "@babel/preset-env": "^7.0.0-beta.40",
-    "babel-loader": "^8.0.0-beta.0",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-plugin-transform-react-jsx": "^6.24.1",
     "css-loader": "^0.28.7",
     "livescript-loader": "^0.1.6",
     "node-sass": "^4.5.3",

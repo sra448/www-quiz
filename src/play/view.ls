@@ -9,7 +9,7 @@ letter-input = ({ letters, used-letters, palette, on-letter-click }) ->
     letters.map (l, id) ->
       class-name = if id in used-letters then "input-letter used" else "input-letter"
       style = { background: palette.LightVibrant?.get-hex(), border-color: palette.DarkVibrant?.get-hex() }
-      div { class-name, style, onclick: -> on-letter-click l, id }, l
+      div { class-name, style, onclick: -> on-letter-click { letter: l, id } }, l
 
 
 letter-answer = ({ answer, current-answer }) ->
