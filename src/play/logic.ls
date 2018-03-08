@@ -47,20 +47,33 @@ load-quiz = (quiz) -> (state, actions) ->
 
 select-letter = ({ letter, id }) -> (state) ->
   answer = state.questions[state.current-question-id].answer
-  current-answer = state.current-answer + letter
 
-  if answer.starts-with current-answer
-    used-letters = [...state.used-letters, id]
-    { ...state, current-answer, used-letters }
+  if state.used-letters.length >= answer.length &&
+     (state.used-letters.index-of undefined) == -1
 
-  else
     state
+  else
+    i = if (state.used-letters.index-of undefined) >= 0
+      state.used-letters.index-of undefined
+    else
+      state.used-letters.length
+
+    used-letters = state.used-letters
+    used-letters[i] = [id, letter]
+    { ...state, used-letters }
+
+
+remove-letter = (i) -> (state) ->
+  used-letters = state.used-letters
+  used-letters[i] = undefined
+
+  { ...state, used-letters }
 
 
 next = -> (state, actions) ->
   if state.current-question-id + 1 < state.questions.length
     current-question-id = state.current-question-id + 1
-    new-state = { ...state, current-question-id, current-answer: "", used-letters: [] }
+    new-state = { ...state, current-question-id, used-letters: [] }
     image = state.questions[current-question-id].image
     actions.reset-palette image
     new-state
@@ -85,7 +98,6 @@ set-palette = (palette) -> (state) ->
 initial-state = {
   questions: []
   current-question-id: 0
-  current-answer: ""
   used-letters: []
   palette: {}
   completed: false
@@ -97,6 +109,7 @@ module.exports = {
   actions: {
     load-quiz,
     select-letter,
+    remove-letter,
     next,
     reset-palette,
     set-palette
