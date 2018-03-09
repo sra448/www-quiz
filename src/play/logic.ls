@@ -57,13 +57,13 @@ select-letter = ({ letter, id }) -> (state) ->
     else
       state.used-letters.length
 
-    used-letters = state.used-letters
+    used-letters = state.used-letters.slice 0
     used-letters[i] = [id, letter]
     { ...state, used-letters }
 
 
 remove-letter = (i) -> (state) ->
-  used-letters = state.used-letters
+  used-letters = state.used-letters.slice 0
   used-letters[i] = undefined
 
   { ...state, used-letters }

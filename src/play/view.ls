@@ -1,6 +1,7 @@
 { div, button, h1, input, img, label } = require "../dom-elements.ls"
 
 
+
 # Components
 
 
@@ -29,7 +30,6 @@ module.exports = ({ state, actions, new-game }) ->
 
   if !completed
     { image, answer, letters } = questions[current-question-id]
-    console.log current-answer, answer
 
     div { style: background-color: palette.LightMuted?.get-hex() },
       img { src: image }
@@ -38,6 +38,7 @@ module.exports = ({ state, actions, new-game }) ->
         letter-input { letters, used-letters, palette, on-letter-click: actions.select-letter }
         if answer == current-answer
           button { onclick: actions.next }, "bravo, next"
+
   else
     div {},
       h1 {}, "thanks"
