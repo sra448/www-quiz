@@ -25679,7 +25679,8 @@ module.exports = function(state, actions){
     return playView({
       state: state.play,
       actions: actions.play,
-      newGame: actions.startPlay
+      newGame: actions.startPlay,
+      stopPlay: actions.stopPlay
     });
   }
 };
@@ -25690,8 +25691,13 @@ module.exports = function(state, actions){
 /* 73 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var ref$, div, button, h1, input, img, label, letterInput, letterAnswer, slice$ = [].slice;
+var ref$, div, button, h1, input, img, label, modes, letterInput, letterAnswer, slice$ = [].slice;
 ref$ = __webpack_require__(2), div = ref$.div, button = ref$.button, h1 = ref$.h1, input = ref$.input, img = ref$.img, label = ref$.label;
+modes = {
+  1: "Wer",
+  2: "Wo",
+  3: "Was"
+};
 letterInput = function(arg$){
   var letters, usedLetters, palette, onLetterClick;
   letters = arg$.letters, usedLetters = arg$.usedLetters, palette = arg$.palette, onLetterClick = arg$.onLetterClick;
@@ -25729,24 +25735,34 @@ letterAnswer = function(arg$){
       onclick: function(){
         return removeLetter(i);
       }
-    }, (ref$ = usedLetters[i]) != null ? ref$[1] : void 8);
+    }, ((ref$ = usedLetters[i]) != null ? ref$[1] : void 8) || "\u00A0");
   }));
 };
 module.exports = function(arg$){
-  var state, actions, newGame, questions, completed, palette, usedLetters, currentQuestionId, currentAnswer, ref$, image, answer, letters;
-  state = arg$.state, actions = arg$.actions, newGame = arg$.newGame;
-  questions = state.questions, completed = state.completed, palette = state.palette, usedLetters = state.usedLetters, currentQuestionId = state.currentQuestionId;
+  var state, actions, newGame, stopPlay, categoryId, questions, completed, palette, usedLetters, currentQuestionId, currentAnswer, ref$, image, answer, letters, style, ref1$, ref2$;
+  state = arg$.state, actions = arg$.actions, newGame = arg$.newGame, stopPlay = arg$.stopPlay;
+  categoryId = state.categoryId, questions = state.questions, completed = state.completed, palette = state.palette, usedLetters = state.usedLetters, currentQuestionId = state.currentQuestionId;
   currentAnswer = usedLetters.map(function(l){
     return l != null ? l[1] : void 8;
   }).join("");
   if (!completed) {
     ref$ = questions[currentQuestionId], image = ref$.image, answer = ref$.answer, letters = ref$.letters;
-    console.log(currentAnswer, answer);
+    style = {
+      background: (ref$ = palette.LightVibrant) != null ? ref$.getHex() : void 8,
+      borderColor: (ref1$ = palette.DarkVibrant) != null ? ref1$.getHex() : void 8
+    };
     return div({
       style: {
-        backgroundColor: (ref$ = palette.LightMuted) != null ? ref$.getHex() : void 8
+        backgroundColor: (ref2$ = palette.LightMuted) != null ? ref2$.getHex() : void 8
       }
-    }, img({
+    }, div({
+      className: "title input-letter",
+      style: style
+    }, modes[categoryId] + " " + (currentQuestionId + 1) + " / 3"), div({
+      className: "exit-button input-letter",
+      style: style,
+      onclick: stopPlay
+    }, "x"), img({
       src: image
     }), div({
       className: "input"
@@ -25891,7 +25907,10 @@ module.exports = function(arg$){
   questions = state.questions, categoryId = state.categoryId;
   return div({}, button({
     onclick: function(){
-      return publish(questions, categoryId);
+      return publish({
+        questions: questions,
+        categoryId: categoryId
+      });
     }
   }, "publish"));
 };
@@ -25938,7 +25957,7 @@ exports = module.exports = __webpack_require__(80)(undefined);
 
 
 // module
-exports.push([module.i, "* {\n  text-align: center; }\n\nhtml, body {\n  height: 100%;\n  padding: 0;\n  margin: 0; }\n\nhtml {\n  background: linear-gradient(to top, #50c9c3, #96deda); }\n\nimg {\n  width: 100%; }\n\n#main, #main > div {\n  height: 100%; }\n\n.answer-letter {\n  display: inline-flex;\n  flex: 0 0 30px;\n  justify-content: center;\n  align-items: center;\n  border: none;\n  border-radius: 2px;\n  margin: 5px;\n  width: 40px;\n  height: 40px;\n  font-weight: bold;\n  text-transform: capitalize;\n  font-family: sans-serif;\n  background-color: rgba(255, 255, 255, 0.4); }\n\n.letters {\n  display: flex;\n  flex-direction: row;\n  justify-content: center;\n  flex-wrap: wrap;\n  padding: 0 50px;\n  margin-top: 20px; }\n\n.input-letter {\n  display: flex;\n  flex: 0 0 30px;\n  justify-content: center;\n  align-items: center;\n  border: 2px solid black;\n  border-bottom-width: 5px;\n  border-radius: 2px;\n  margin: 5px;\n  width: 30px;\n  height: 30px;\n  text-transform: capitalize;\n  font-family: sans-serif; }\n\n.used {\n  opacity: 0.4;\n  pointer-events: none; }\n\n.answer {\n  border: 1px solid grey; }\n\n.input {\n  position: absolute;\n  right: 0;\n  bottom: 0;\n  left: 0;\n  height: 35%;\n  min-height: 200px; }\n\n.navigation > div {\n  text-align: center; }\n\n.navigation h1 {\n  width: 100%;\n  text-align: center;\n  height: 30%;\n  margin: 20% 0;\n  padding-top: 20%; }\n\n.navigation Button {\n  margin: 10px;\n  width: 70%;\n  height: 60px; }\n\ninput[type='file'] {\n  display: none; }\n\n.categories h1 {\n  width: 100%;\n  text-align: center;\n  height: 30%;\n  margin: 20% 0;\n  padding-top: 20%; }\n\n.categories span {\n  margin: 10px;\n  width: 70%;\n  height: 60px; }\n", ""]);
+exports.push([module.i, "* {\n  text-align: center; }\n\nhtml, body {\n  height: 100%;\n  padding: 0;\n  margin: 0; }\n\nhtml {\n  background: linear-gradient(to top, #50c9c3, #96deda); }\n\nimg {\n  width: 100%; }\n\n#main, #main > div {\n  height: 100%; }\n\n.answer-letter {\n  display: inline-flex;\n  flex: 0 0 30px;\n  justify-content: center;\n  align-items: center;\n  border: none;\n  border-radius: 2px;\n  margin: 5px;\n  width: 40px;\n  height: 40px;\n  font-weight: bold;\n  text-transform: capitalize;\n  font-family: sans-serif;\n  background-color: rgba(255, 255, 255, 0.5); }\n\n.letters {\n  display: flex;\n  flex-direction: row;\n  justify-content: center;\n  flex-wrap: wrap;\n  padding: 0 50px;\n  margin-top: 20px; }\n\n.input-letter {\n  display: flex;\n  flex: 0 0 30px;\n  justify-content: center;\n  align-items: center;\n  border: 2px solid black;\n  border-bottom-width: 5px;\n  border-radius: 2px;\n  margin: 5px;\n  width: 30px;\n  height: 30px;\n  text-transform: capitalize;\n  font-family: sans-serif; }\n\n.used {\n  opacity: 0.4;\n  pointer-events: none; }\n\n.answer {\n  border: 1px solid grey; }\n\n.input {\n  position: absolute;\n  right: 0;\n  bottom: 0;\n  left: 0;\n  height: 35%;\n  min-height: 200px; }\n\n.navigation > div {\n  text-align: center; }\n\n.navigation h1 {\n  width: 100%;\n  text-align: center;\n  height: 30%;\n  margin: 20% 0;\n  padding-top: 20%; }\n\n.navigation Button {\n  margin: 10px;\n  width: 70%;\n  height: 60px; }\n\ninput[type='file'] {\n  display: none; }\n\n.categories h1 {\n  width: 100%;\n  text-align: center;\n  height: 30%;\n  margin: 20% 0;\n  padding-top: 20%; }\n\n.categories span {\n  margin: 10px;\n  width: 70%;\n  height: 60px; }\n\n.title {\n  position: absolute;\n  top: 15px;\n  left: 10px;\n  width: auto;\n  padding-left: 8px;\n  padding-right: 8px; }\n\n.exit-button {\n  position: absolute;\n  top: 15px;\n  right: 10px; }\n", ""]);
 
 // exports
 
@@ -26496,7 +26515,7 @@ module.exports = function (css) {
 /* 83 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var random, modes, randomQuiz, startCreate, startPlay, publishQuiz, slice$ = [].slice;
+var random, modes, randomQuiz, startCreate, startPlay, stopPlay, publishQuiz, slice$ = [].slice;
 random = __webpack_require__(37).random;
 modes = {
   main: 0,
@@ -26522,6 +26541,12 @@ startPlay = function(){
     return ref$ = {}, import$(ref$, newState), ref$.mode = modes.playing, ref$;
   };
 };
+stopPlay = function(){
+  return function(state){
+    var ref$;
+    return ref$ = {}, import$(ref$, state), ref$.mode = modes.main, ref$;
+  };
+};
 publishQuiz = function(quiz){
   return function(state){
     var quizes, ref$;
@@ -26539,6 +26564,7 @@ module.exports = {
   actions: {
     startCreate: startCreate,
     startPlay: startPlay,
+    stopPlay: stopPlay,
     publishQuiz: publishQuiz
   }
 };
@@ -26680,8 +26706,8 @@ getPalette = function(img){
 loadQuiz = function(quiz){
   return function(state, actions){
     var questions, newState, ref$, image;
-    questions = values(quiz).map(enhanceQuestion);
-    newState = (ref$ = {}, import$(ref$, initialState), ref$.questions = questions, ref$);
+    questions = values(quiz.questions).map(enhanceQuestion);
+    newState = (ref$ = {}, import$(ref$, initialState), ref$.questions = questions, ref$.categoryId = quiz.categoryId, ref$);
     image = newState.questions[0].image;
     actions.resetPalette(image);
     return newState;
@@ -26699,7 +26725,7 @@ selectLetter = function(arg$){
       i = state.usedLetters.indexOf(undefined) >= 0
         ? state.usedLetters.indexOf(undefined)
         : state.usedLetters.length;
-      usedLetters = state.usedLetters;
+      usedLetters = state.usedLetters.slice(0);
       usedLetters[i] = [id, letter];
       return ref$ = {}, import$(ref$, state), ref$.usedLetters = usedLetters, ref$;
     }
@@ -26708,9 +26734,13 @@ selectLetter = function(arg$){
 removeLetter = function(i){
   return function(state){
     var usedLetters, ref$;
-    usedLetters = state.usedLetters;
-    usedLetters[i] = undefined;
-    return ref$ = {}, import$(ref$, state), ref$.usedLetters = usedLetters, ref$;
+    usedLetters = state.usedLetters.slice(0);
+    if (usedLetters[i] != null) {
+      usedLetters[i] = undefined;
+      return ref$ = {}, import$(ref$, state), ref$.usedLetters = usedLetters, ref$;
+    } else {
+      return state;
+    }
   };
 };
 next = function(){
@@ -26739,6 +26769,7 @@ setPalette = function(palette){
   };
 };
 initialState = {
+  categoryId: undefined,
   questions: [],
   currentQuestionId: 0,
   usedLetters: [],
