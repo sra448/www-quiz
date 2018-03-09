@@ -30,6 +30,10 @@ start-play = -> (state, actions) ->
   { ...new-state, mode: modes.playing }
 
 
+stop-play = -> (state) ->
+  { ...state, mode: modes.main }
+
+
 publish-quiz = (quiz) -> (state) ->
   quizes = [...state.quizes, quiz]
   local-storage.set-item "quizes", JSON.stringify quizes
@@ -49,6 +53,7 @@ module.exports = {
   actions: {
     start-create,
     start-play,
+    stop-play,
     publish-quiz
   }
 }

@@ -37,8 +37,8 @@ get-palette = (img) ->
 
 
 load-quiz = (quiz) -> (state, actions) ->
-  questions = values(quiz).map enhance-question
-  new-state = { ...initial-state, questions }
+  questions = values(quiz.questions).map enhance-question
+  new-state = { ...initial-state, questions, category-id: quiz.category-id }
   image = new-state.questions[0].image
   actions.reset-palette image
   new-state
@@ -64,9 +64,12 @@ select-letter = ({ letter, id }) -> (state) ->
 
 remove-letter = (i) -> (state) ->
   used-letters = state.used-letters.slice 0
-  used-letters[i] = undefined
 
-  { ...state, used-letters }
+  if used-letters[i]?
+    used-letters[i] = undefined
+    { ...state, used-letters }
+  else
+    state
 
 
 next = -> (state, actions) ->
@@ -95,6 +98,7 @@ set-palette = (palette) -> (state) ->
 
 
 initial-state = {
+  category-id: undefined
   questions: []
   current-question-id: 0
   used-letters: []

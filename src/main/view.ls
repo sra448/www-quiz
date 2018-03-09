@@ -27,4 +27,5 @@ module.exports = (state, actions) ->
       state: state.play,
       actions: actions.play,
       new-game: actions.start-play
+      stop-play: actions.stop-play
     }
