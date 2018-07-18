@@ -1,8 +1,5 @@
 { random } = require \lodash
-
-
-
-# helper functions
+firebase = require \firebase
 
 
 modes = {
@@ -12,9 +9,39 @@ modes = {
 }
 
 
+# firebase config
+
+
+firebase.initializeApp {
+  apiKey: "AIzaSyBiQUEUzIAs4BPqYR8z3CvrVcMnQQpaPws",
+  authDomain: "quiz-48260.firebaseapp.com",
+  databaseURL: "https://quiz-48260.firebaseio.com",
+  projectId: "quiz-48260",
+  storageBucket: "quiz-48260.appspot.com",
+  messagingSenderId: "313622020172"
+}
+
+db = firebase.firestore()
+
+
+
+# helper functions
+
+
 random-quiz = (quizes) ->
   random-id = random 0, quizes.length - 1
   quiz = quizes[random-id] || {}
+
+
+saveToDb = (quiz) ->
+  db.collection "quizes"
+    .add {
+      category-id: quiz.category-id
+      answer1: quiz.questions["1"].answer
+      answer2: quiz.questions["2"].answer
+      answer3: quiz.questions["3"].answer
+    }
+
 
 
 # actions
@@ -34,9 +61,9 @@ stop-play = -> (state) ->
   { ...state, mode: modes.main }
 
 
-publish-quiz = (quiz) -> (state) ->
+publish-quiz = (quiz) -> (state, actions) ->
   quizes = [...state.quizes, quiz]
-  local-storage.set-item "quizes", JSON.stringify quizes
+  saveToDb quiz
   { ...state, quizes, mode: modes.main }
 
 
