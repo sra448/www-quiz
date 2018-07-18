@@ -3,17 +3,12 @@
 
 
 view = require "./main/view.ls"
-
-
-# require the styles
-
-
-require "./styles.scss"
-
-
 main = require "./main/logic.ls"
 create = require "./create/logic.ls"
 play = require "./play/logic.ls"
+
+
+require "./styles.scss"
 
 
 state = {

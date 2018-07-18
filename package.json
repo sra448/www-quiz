@@ -2,8 +2,8 @@
   "name": "www-quiz",
   "version": "1.0.0",
   "scripts": {
-    "start": "webpack",
-    "build": "webpack",
+    "start": "parcel src/index.html",
+    "build": "parcel build src/index.html",
     "deploy": "npm run build && gh-pages -d public"
   },
   "dependencies": {
@@ -12,12 +12,11 @@
     "node-vibrant": "^3.0.0"
   },
   "devDependencies": {
-    "css-loader": "^0.28.7",
-    "gh-pages": "^1.1.0",
-    "livescript-loader": "^0.1.6",
-    "node-sass": "^4.5.3",
-    "sass-loader": "^6.0.6",
-    "style-loader": "^0.19.0",
-    "webpack": "^3.11.0"
+    "babel-plugin-transform-react-jsx": "^6.24.1",
+    "babel-preset-env": "^1.7.0",
+    "gh-pages": "^1.2.0",
+    "node-sass": "^4.9.2",
+    "parcel-bundler": "^1.9.7",
+    "parcel-plugin-livescript": "^1.0.0"
   }
 }
