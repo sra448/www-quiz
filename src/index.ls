@@ -1,4 +1,7 @@
+{ create-browser-history } = require \history
 { app } = require \hyperapp
+
+
 { div, h1, h2, button } = require "./dom-elements.ls"
 
 
@@ -25,4 +28,16 @@ actions = {
 }
 
 
-app state, actions, view, document.get-element-by-id "main"
+api = app state, actions, view, document.get-element-by-id "main"
+
+
+
+# direct urls
+
+
+history = create-browser-history()
+path = history.location.pathname.replace("/", "")
+
+
+if path != ""
+  api.start-play path

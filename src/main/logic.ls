@@ -1,5 +1,7 @@
 { random } = require \lodash
+{ get } = require \axios
 firebase = require \firebase/app
+
 require \firebase/firestore
 require \firebase/storage
 
@@ -23,17 +25,75 @@ firebase.initializeApp {
   messagingSenderId: "313622020172"
 }
 
+
 db = firebase.firestore()
 storage = firebase.storage().ref()
 
 
 
-# helper functions
+# getting a quiz
+
+
+get-quiz = (id) ->
+  Promise.all [
+    (get-answers id),
+    (get-images id)
+  ]
+    .then ([answers, images]) ->
+      {
+        category-id: 1,
+        questions: {
+          "1": {
+            image: images[0],
+            answer: answers.answer1
+          },
+          "2": {
+            image: images[1],
+            answer: answers.answer2
+          },
+          "3": {
+            image: images[2],
+            answer: answers.answer3
+          },
+        }
+      }
+
+
+get-answers = (quiz-id) ->
+  db
+    .collection "quizes"
+    .doc quiz-id
+    .get()
+    .then (doc) ->
+      doc.data()
 
 
 random-quiz = (quizes) ->
   random-id = random 0, quizes.length - 1
   quiz = quizes[random-id] || {}
+
+
+get-images = (quiz-id) ->
+  Promise.all [
+    (get-image "#{quiz-id}-1"),
+    (get-image "#{quiz-id}-2"),
+    (get-image "#{quiz-id}-3")
+  ]
+
+
+get-image = (id) ->
+  storage.child id
+    .get-download-URL()
+    .then (url) ->
+      get url, { responseType: "arraybuffer" }
+    .then ({ data }) ->
+      new Buffer(data, "binary").toString("base64")
+    .then (str) ->
+      "data:image/jpeg;base64,#{str}"
+
+
+
+# saving a quiz
 
 
 persist-quiz = (quiz) ->
@@ -72,8 +132,21 @@ start-create = -> (state) ->
   { ...state, mode: modes.creating }
 
 
-start-play = -> (state, actions) ->
-  quiz = random-quiz state.quizes
+start-play = (quiz-id) -> (state, actions) ->
+  # quiz = if quiz-id?
+  #   get-quiz quiz-id
+  # else
+  #   random-quiz state.quizes
+
+  get-quiz quiz-id
+    .then (quiz) ->
+      actions.start-quiz quiz
+
+  state
+
+
+
+start-quiz = (quiz) -> (state, actions) ->
   new-state = actions.play.load-quiz quiz
   { ...new-state, mode: modes.playing }
 
@@ -101,6 +174,7 @@ module.exports = {
   actions: {
     start-create,
     start-play,
+    start-quiz,
     stop-play,
     publish-quiz
   }
