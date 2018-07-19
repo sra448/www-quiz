@@ -1,5 +1,7 @@
 { random } = require \lodash
-firebase = require \firebase
+firebase = require \firebase/app
+require \firebase/firestore
+require \firebase/storage
 
 
 modes = {
@@ -22,6 +24,7 @@ firebase.initializeApp {
 }
 
 db = firebase.firestore()
+storage = firebase.storage().ref()
 
 
 
@@ -33,7 +36,13 @@ random-quiz = (quizes) ->
   quiz = quizes[random-id] || {}
 
 
-saveToDb = (quiz) ->
+persist-quiz = (quiz) ->
+  save-answers quiz
+    .then (ref) -> ref.id
+    .then save-images quiz
+
+
+save-answers = (quiz) ->
   db.collection "quizes"
     .add {
       category-id: quiz.category-id
@@ -41,6 +50,18 @@ saveToDb = (quiz) ->
       answer2: quiz.questions["2"].answer
       answer3: quiz.questions["3"].answer
     }
+
+
+save-images = (quiz) -> (quiz-id) ->
+  save-image quiz-id, quiz.questions["1"].image, "1"
+  save-image quiz-id, quiz.questions["2"].image, "2"
+  save-image quiz-id, quiz.questions["3"].image, "3"
+
+
+save-image = (name, image, id) ->
+  storage
+    .child("#{name}-#{id}")
+    .putString((image.replace /\s/g, ""), "data_url", { contentType: "image/jpg" })
 
 
 
@@ -63,7 +84,7 @@ stop-play = -> (state) ->
 
 publish-quiz = (quiz) -> (state, actions) ->
   quizes = [...state.quizes, quiz]
-  saveToDb quiz
+  persist-quiz quiz
   { ...state, quizes, mode: modes.main }
 
 
