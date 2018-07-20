@@ -48,7 +48,7 @@ module.exports = ({ state, actions, new-game, stop-play }) ->
       div { class-name: "input" },
         letter-answer { answer, used-letters, remove-letter: actions.remove-letter }
         letter-input { letters, used-letters, palette, on-letter-click: actions.select-letter }
-        if answer == current-answer
+        if answer.to-lower-case() == current-answer.to-lower-case()
           button { onclick: actions.next }, "bravo, next"
 
   else
