@@ -3,6 +3,9 @@ add-question-dialog = require "./components/add-question-dialog.ls"
 publish-screen = require "./components/publish-screen.ls"
 
 
+require "./styles.scss"
+
+
 module.exports = ({ state, actions, publish }) ->
   { category-id, is-finished } = state
 

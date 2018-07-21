@@ -4,15 +4,27 @@ play-view = require "../play/view.ls"
 create-view = require "../create/view.ls"
 
 
+require "./styles.scss"
+
 
 module.exports = (state, actions) ->
 
   if state.mode == 0 # main.modes.main
-    div { class-name: "navigation" },
-      h1 {}, "QUIZ OHNE NAME"
-      if state.quizes.length > 0
-        button { onclick: actions.start-play }, "Play"
-      button { onclick: actions.start-create }, "Create"
+    div { class-name: "start-screen" },
+      h1 {},
+        div {}, "wWw"
+        div {}, "Quiz"
+      div { class-name: "navigation" },
+        button {
+          id: "play",
+          class-name: "box",
+          onclick: actions.start-play
+        }, "Spielen"
+        button {
+          id: "create",
+          class-name: "box",
+          onclick: actions.start-create
+        }, "Erstellen"
 
 
   else if state.mode == 1 # main.modes.creating

@@ -1,6 +1,8 @@
 { div, button, h1, input, img, label } = require "../dom-elements.ls"
 
 
+require "./styles.scss"
+
 
 modes = {
   1: "Wer"
@@ -39,8 +41,6 @@ module.exports = ({ state, actions, new-game, stop-play }) ->
     background: (palette.LightVibrant || palette.LightMuted)?.get-hex(),
     border-color: palette.DarkVibrant?.get-hex() || "black"
   }
-
-  console.log palette
 
   if !completed
     { image, answer, letters } = questions[current-question-id]

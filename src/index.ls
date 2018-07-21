@@ -11,9 +11,6 @@ create = require "./create/logic.ls"
 play = require "./play/logic.ls"
 
 
-require "./styles.scss"
-
-
 state = {
   ...main.state
   create: create.state,
