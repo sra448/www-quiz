@@ -18,7 +18,7 @@ module.exports = (state, actions) ->
         button {
           id: "play",
           class-name: "box",
-          onclick: actions.start-play
+          onclick: -> actions.start-play()
         }, "Spielen"
         button {
           id: "create",

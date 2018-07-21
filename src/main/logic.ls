@@ -35,6 +35,8 @@ storage = firebase.storage().ref()
 
 
 get-quiz = (id) ->
+  console.log "load-quiz", id
+  
   Promise.all [
     (get-answers id),
     (get-images id)
@@ -66,11 +68,6 @@ get-answers = (quiz-id) ->
     .get()
     .then (doc) ->
       doc.data()
-
-
-random-quiz = (quizes) ->
-  random-id = random 0, quizes.length - 1
-  quiz = quizes[random-id] || {}
 
 
 get-images = (quiz-id) ->
@@ -133,12 +130,7 @@ start-create = -> (state) ->
 
 
 start-play = (quiz-id) -> (state, actions) ->
-  # quiz = if quiz-id?
-  #   get-quiz quiz-id
-  # else
-  #   random-quiz state.quizes
-
-  get-quiz quiz-id
+  get-quiz (quiz-id || "ze3DEpkMzd29huG6UFyU")
     .then (quiz) ->
       actions.start-quiz quiz
 
