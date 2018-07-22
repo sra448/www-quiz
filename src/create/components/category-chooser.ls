@@ -1,12 +1,23 @@
-{ div, h1, input, img, label } = require "../../dom-elements.ls"
+{ div, h1, h2, button, input, img, label } = require "../../dom-elements.ls"
 
 
 camera-button = require "./camera-button.ls"
 
 
+category = ({ id, title, select-category }) ->
+  camera-button {
+    id: "category#{id}",
+    class-name: "button box",
+    onclick: (image) -> select-category { id, image }
+  }, title
+
+
 module.exports = ({ state, actions }) ->
   div { class-name: "categories" },
-    h1 {}, "Quiz erstellen"
-    camera-button { id: "category1", onclick: (image) -> actions.select-category { id: 1, image } }, "Wer"
-    camera-button { id: "category2", onclick: (image) -> actions.select-category { id: 2, image } }, "Wo"
-    camera-button { id: "category3", onclick: (image) -> actions.select-category { id: 3, image } }, "Was"
+    h1 {},
+      div {}, "wWw"
+      div {}, "Quiz"
+    div {},
+      category { id: 1, title: "Wer", select-category: actions.select-category }
+      category { id: 2, title: "Wo", select-category: actions.select-category }
+      category { id: 3, title: "Was", select-category: actions.select-category }
